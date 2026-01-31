@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nihal's Interactive Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      text-align: center;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background-color: #2c3e50;
+      padding: 10px;
+    }
+    .navbar button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 16px;
+      margin: 0 10px;
+      cursor: pointer;
+    }
+    .navbar button:hover {
+      text-decoration: underline;
+    }
+
+    /* TABS */
+    .tab {
+      display: none;
+      padding: 25px;
+      min-height: 100vh;
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
+
+    /* HOME TAB */
+    #home {
+      background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?fit=crop&w=1350&q=80');
+      color: #ffffff;
+    }
+
+    /* ABOUT ME TAB */
+    #about {
+      background: linear-gradient(135deg, #87ceeb, #6fa8dc);
+      color: #102a43;
+    }
+
+    /* GAMES TAB */
+    #games {
+      background-image: url('https://images.unsplash.com/photo-1581091215364-ec983e64e3c7?fit=crop&w=1350&q=80');
+      color: white;
+    }
+
+    #games canvas {
+      background-color: #ffffff;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ROBOT */
+    .robot {
+      width: 160px;
+      margin: 20px auto;
+      cursor: pointer;
+      filter: drop-shadow(0 0 10px #000);
+    }
+    .head {
+      background: #d9d9d9;
+      width: 160px;
+      height: 120px;
+      border-radius: 20px;
+      position: relative;
+    }
+    .eye {
+      width: 20px;
+      height: 20px;
+      background: black;
+      border-radius: 50%;
+      position: absolute;
+      top: 40px;
+    }
+    .eye.left { left: 40px; }
+    .eye.right { right: 40px; }
+    .body {
+      width: 120px;
+      height: 100px;
+      background: #b0b0b0;
+      margin: 0 auto;
+      border-radius: 10px;
+    }
+
+    .gameButton {
+      margin: 5px;
+      padding: 8px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #f39c12;
+      color: white;
+    }
+    .gameButton:hover {
+      background-color: #e67e22;
+    }
+
+    .customizeButton {
+      margin: 3px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+    }
+    .customizeButton:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<div class="navbar">
+  <button onclick="openTab('home')">Home</button>
+  <button onclick="openTab('about')">About Me</button>
+  <button onclick="openTab('games')">Games</button>
+</div>
+
+<!-- HOME TAB -->
+<div id="home" class="tab">
+  <h1>Welcome to My Website</h1>
+  <div class="robot" onclick="robotTalk()">
+    <div class="head">
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+    </div>
+    <div class="body" id="robotBody"></div>
+  </div>
+  <p id="robotText"><b>Click the robot to interact!</b></p>
+</div>
+
+<!-- ABOUT ME TAB -->
+<div id="about" class="tab">
+  <h1>About Me</h1>
+  <p>
+    Hello, my name is Nihal. I am a student of JSSPS, Al Safa, Dubai.
+    I am 10 years old and I enjoy learning technology and creating websites.
+  </p>
+  <p>
+    My five favourite foods are burgers, dhal, fish fry, chicken,
+    and pepperoni pizza. I live in The Gardens, Dubai.
+  </p>
+  <p>
+    My mom and dad are the best creation in the entire world.
+    Their names are Triveni and Raju.
+  </p>
+  <p>
+    📞 <b>Call for more info:</b> 0555578560
+  </p>
+</div>
+
+<!-- GAMES TAB -->
+<div id="games" class="tab">
+  <h1>Games</h1>
+
+  <!-- Snake -->
+  <h2>🐍 Snake Game</h2>
+  <button class="gameButton" onclick="startSnake()">Play Snake</button>
+  <button class="gameButton" onclick="toggleFullScreen('snake')">Fullscreen</button>
+  <canvas id="snake" width="300" height="300" style="display:none;"></canvas>
+
+  <!-- Falling Apple -->
+  <h2>🍎 Falling Apple Catch</h2>
+  <button class="gameButton" onclick="startApple()">Play Apple Catch</button>
+  <button class="gameButton" onclick="toggleFullScreen('apple')">Fullscreen</button>
+  <canvas id="apple" width="300" height="300" style="display:none;"></canvas>
+
+  <!-- City Builder Deluxe -->
+  <h2>🏗 City Builder Deluxe</h2>
+  <button class="gameButton" onclick="startCity()">Play City Builder</button>
+  <button class="gameButton" onclick="toggleFullScreen('city')">Fullscreen</button>
+  <canvas id="city" width="400" height="300" style="display:none;"></canvas>
+  <p id="cityStats"></p>
+  <div>
+    <h3>Character Customization</h3>
+    <button class="customizeButton" onclick="changeColor('red')">Red Body (10 Gems)</button>
+    <button class="customizeButton" onclick="changeColor('blue')">Blue Body (10 Gems)</button>
+    <button class="customizeButton" onclick="changeColor('green')">Green Body (10 Gems)</button>
+    <button class="customizeButton" onclick="addHat()">Add Hat (20 Gems)</button>
+  </div>
+</div>
+
+<script>
+/* TAB SWITCHING */
+function openTab(tabName){
+  document.querySelectorAll(".tab").forEach(tab=>tab.style.display="none");
+  document.getElementById(tabName).style.display="block";
+}
+openTab("home");
+
+/* ROBOT INTERACTION */
+const robotMessages = [
+  "Hello! I am Nihal's robot 🤖",
+  "I like coding and games!",
+  "Click the Games tab to play 🎮"
+];
+let robotIndex=0;
+function robotTalk(){
+  document.getElementById("robotText").innerText=robotMessages[robotIndex];
+  robotIndex=(robotIndex+1)%robotMessages.length;
+}
+
+/* FULLSCREEN FUNCTION */
+function toggleFullScreen(canvasId){
+  const canvas=document.getElementById(canvasId);
+  if(canvas.requestFullscreen){
+    canvas.requestFullscreen();
+  } else if(canvas.webkitRequestFullscreen){
+    canvas.webkitRequestFullscreen();
+  }
+}
+
+/* ------------------- SNAKE GAME ------------------- */
+const snakeCanvas=document.getElementById("snake");
+const sctx=snakeCanvas.getContext("2d");
+let snake=[], sDirection="RIGHT", food={x:0,y:0};
+let snakeInterval=null;
+
+function startSnake(){
+  snakeCanvas.style.display="block";
+  snake=[{x:150,y:150}]; sDirection="RIGHT";
+  food={x:Math.floor(Math.random()*30)*10, y:Math.floor(Math.random()*30)*10};
+  if(snakeInterval) clearInterval(snakeInterval);
+
+  document.addEventListener("keydown", e=>{
+    if(e.key.includes("Arrow")) sDirection=e.key.replace("Arrow","").toUpperCase();
+  });
+
+  snakeInterval=setInterval(()=>{
+    sctx.clearRect(0,0,300,300);
+    sctx.fillStyle="green"; snake.forEach(p=>sctx.fillRect(p.x,p.y,10,10));
+    sctx.fillStyle="red"; sctx.fillRect(food.x,food.y,10,10);
+    let head={...snake[0]};
+    if(sDirection==="UP") head.y-=10;
+    if(sDirection==="DOWN") head.y+=10;
+    if(sDirection==="LEFT") head.x-=10;
+    if(sDirection==="RIGHT") head.x+=10;
+    snake.unshift(head);
+    if(head.x===food.x&&head.y===food.y){
+      food={x:Math.floor(Math.random()*30)*10, y:Math.floor(Math.random()*30)*10};
+    } else snake.pop();
+  },150);
+}
+
+/* ------------------- APPLE CATCH GAME ------------------- */
+const appleCanvas=document.getElementById("apple");
+const actx=appleCanvas.getContext("2d");
+let basketX=120, appleX=0, appleY=0, appleInterval=null;
+
+function startApple(){
+  appleCanvas.style.display="block";
+  basketX=120; appleY=0; appleX=Math.random()*280;
+  if(appleInterval) clearInterval(appleInterval);
+
+  document.addEventListener("keydown", e=>{
+    if(e.key==="ArrowLeft"&&basketX>0) basketX-=20;
+    if(e.key==="ArrowRight"&&basketX<240) basketX+=20;
+  });
+
+  appleInterval=setInterval(()=>{
+    actx.clearRect(0,0,300,300);
+    actx.fillStyle="red"; actx.beginPath(); actx.arc(appleX,appleY,10,0,Math.PI*2); actx.fill();
+    actx.fillStyle="brown"; actx.fillRect(basketX,260,60,20);
+    appleY+=5;
+    if(appleY>300 || (appleY>250 && appleX>basketX && appleX<basketX+60)){
+      appleY=0; appleX=Math.random()*280;
+    }
+  },50);
+}
+
+/* ------------------- CITY BUILDER DELUXE ------------------- */
+const cityCanvas=document.getElementById("city");
+const cctx=cityCanvas.getContext("2d");
+let materials=0, buildings=0, xp=0, level=1, gems=0;
+let cityInterval=null;
+let robotColor='gray', hasHat=false;
+
+function startCity(){
+  cityCanvas.style.display="block";
+  materials=0; buildings=0; xp=0; level=1; gems=0;
+  robotColor='gray'; hasHat=false;
+  updateCityStats();
+
+  cityInterval=setInterval(()=>{
+    // Collect material automatically
+    materials++;
+    if(materials>=5){ // build a building automatically every 5 materials
+      materials-=5;
+      buildings++;
+      xp+=20;
+      if(xp>=100){xp-=100; level++; gems+=60;}
+    }
+    drawCity();
+    updateCityStats();
+  },500);
+}
+
+function drawCity(){
+  cctx.clearRect(0,0,400,300);
+  // Ground
+  cctx.fillStyle="green"; cctx.fillRect(0,250,400,50);
+  // Buildings
+  for(let i=0;i<buildings;i++){
+    cctx.fillStyle = (i%3===0)?"saddlebrown":i%3===1?"gray":"darkgray";
+    cctx.fillRect(10+i*40,250-20*Math.min(i,5),30,20);
+  }
+  // Draw robot character
+  cctx.fillStyle=robotColor;
+  cctx.fillRect(180,230-20*Math.min(buildings,5),20,20);
+  if(hasHat){
+    cctx.fillStyle="red";
+    cctx.fillRect(180,220-20*Math.min(buildings,5),20,5);
+  }
+}
+
+function updateCityStats(){
+  document.getElementById("cityStats").innerText=
+  `Materials: ${materials} | Buildings: ${buildings} | XP: ${xp} | Level: ${level} | Gems: ${gems}`;
+}
+
+/* Character Customization */
+function changeColor(color){
+  if(gems>=10){ gems-=10; robotColor=color; updateCityStats(); drawCity();}
+  else alert("Not enough gems!");
+}
+
+function addHat(){
+  if(gems>=20){ gems-=20; hasHat=true; updateCityStats(); drawCity();}
+  else alert("Not enough gems!");
+}
+</script>
+
+</body>
+</html>
